@@ -44,7 +44,6 @@ def adicionar_historico_compras(
     return {"mensagem": "Histórico de compras atualizado"}
 
 
-
 @router.post("/recomendacoes/{usuario_id}", response_model=List[Produto])
 def recomendar_produtos(usuario_id: int, preferencias: Preferencias) -> List[Produto]:
     """Recomenda produtos com base no histórico de compras e preferências do usuário."""
