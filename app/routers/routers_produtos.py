@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException
 from typing import List, Dict
+from fastapi import APIRouter, HTTPException
 from app.models.models_produtos import (
     Produto,
     CriarProduto,
@@ -16,11 +16,10 @@ contador_produto: int = 1
 # Histórico de compras em memória
 historico_de_compras: Dict[int, List[int]] = {}
 
-# Rota para cadastrar produtos
-
 
 @router.post("/produtos/", response_model=Produto)
 def criar_produto(produto: CriarProduto) -> Produto:
+    """Cria um novo produto com o nome, categoria e tags fornecidos."""
     global contador_produto
     novo_produto = Produto(id=contador_produto, **produto.model_dump())
     produtos.append(novo_produto)
@@ -28,32 +27,26 @@ def criar_produto(produto: CriarProduto) -> Produto:
     return novo_produto
 
 
-# Rota para listar todos os produtos
-
-
 @router.get("/produtos/", response_model=List[Produto])
 def listar_produtos() -> List[Produto]:
+    """Retorna uma lista de produtos cadastrados."""
     return produtos
-
-
-# Rota para simular a criação do histórico de compras de um usuário
 
 
 @router.post("/historico_compras/{usuario_id}")
 def adicionar_historico_compras(
     usuario_id: int, compras: HistoricoCompras
 ) -> Dict[str, str]:
+    """Adiciona um histórico de compras para um usuário."""
     if usuario_id not in [usuario.id for usuario in usuarios]:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     historico_de_compras[usuario_id] = compras.produtos_ids
     return {"mensagem": "Histórico de compras atualizado"}
 
 
-# Rota para recomendações de produtos
-
-
 @router.post("/recomendacoes/{usuario_id}", response_model=List[Produto])
 def recomendar_produtos(usuario_id: int, preferencias: Preferencias) -> List[Produto]:
+    """Recomenda produtos com base no histórico de compras e preferências do usuário."""
     if usuario_id not in historico_de_compras:
         raise HTTPException(
             status_code=404, detail="Histórico de compras não encontrado"
