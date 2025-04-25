@@ -66,9 +66,11 @@ def recomendar_produtos(usuario_id: int, preferencias: Preferencias) -> List[Pro
 
         # Filtrar as recomendações com base nas preferências
         produtos_recomendados_categorias = [
-            produto for produto in produtos_recomendados if produto.categoria in preferencias.categorias
+            produto
+            for produto in produtos_recomendados
+            if produto.categoria in preferencias.categorias
         ]  # Preferencias de categorias
-        
+
         produtos_recomendados_filtrados = []
         for produto in produtos_recomendados_categorias:
             for tag in produto.tags:
@@ -76,9 +78,8 @@ def recomendar_produtos(usuario_id: int, preferencias: Preferencias) -> List[Pro
                 break
 
         return produtos_recomendados_filtrados
-    
+
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
